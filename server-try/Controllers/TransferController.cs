@@ -30,7 +30,7 @@ namespace server_try.Controllers
                 return Json("couldnt find user");
             }
             var currentContact = _context.Contact.Include(x => x.ContactMessages).Where(u => u.id == from && u.UserId == currentUser.Id).FirstOrDefault();
-            if (currentUser == null)
+            if (currentContact == null)
             {
                 return Json("couldnt find contact");
             }
