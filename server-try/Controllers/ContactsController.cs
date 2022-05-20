@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using server.Models;
 using server_try.Data;
 
 namespace server_try.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class ContactsController : Controller
     {
         private readonly server_tryContext _context;
@@ -20,20 +23,33 @@ namespace server_try.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string user)
+        public async Task<IActionResult> Get(string user)
         {
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
+                //user wasnt found
                 return NotFound();
             }
-            return Json(currentUser.ContactsList);
+            var ret =
+                    from value in
+                    (from data in currentUser.ContactsList
+                     orderby data.lastdate descending
+                     select new { ID = data.id, name = data.name,server= data.server,last= data.last,lastdate=data.lastdate })
+                                group value by value.name into g
+                                select g.First();
+
+            return Json(ret);
         }
 
         // POST: Contacts
         [HttpPost]
-        public async Task<IActionResult> Index( string id, string name, string server, string user)
+        public async Task<IActionResult> Post([FromBody] Dictionary<string, string> data)
         {
+            string id = data["id"];
+            string name = data["name"];
+            string server = data["server"];
+            string user = data["user"];
             var currentUser = await _context.User.Include(x=>x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
@@ -50,9 +66,9 @@ namespace server_try.Controllers
             return Json("Success");
         }
 
-        // GET: Contacts/Details/5
-        [HttpGet]
-        public async Task<IActionResult> Details(string id, string user)
+        // GET: Contacts/:5
+        [HttpGet(":{id}")]
+        public async Task<IActionResult> Get(string id, string user)
         {
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
@@ -69,15 +85,21 @@ namespace server_try.Controllers
             {
                 return Json("contact wasnt found");
             }
+            var ret =
+                from data in contact
+                select new { ID = data.id, name = data.name, server = data.server, last = data.last, lastdate = data.lastdate };
 
-            return Json(contact);
+            return Json(ret.ElementAt(0));
         }
 
 
 
-        [HttpPut]
-        public async Task<IActionResult> Details2(string id,string name,string server, string user)
+        [HttpPut(":{id}")]
+        public async Task<IActionResult> Put(string id, [FromBody] Dictionary<string, string> data)
         {
+            string name = data["name"];
+            string server = data["server"];
+            string user = data["user"];
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
@@ -101,112 +123,29 @@ namespace server_try.Controllers
         }
 
 
-        [HttpDelete]
-        public async Task<IActionResult> Details3(string id, string user)
+        [HttpDelete(":{id}")]
+        public async Task<IActionResult> Delete([FromBody] string user, string id)
         {
+
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
-                return Json("user wasnt found");
+                return BadRequest();
             }
             if (id == null || _context.Contact == null)
             {
-                return Json("contact wasnt found");
+                return NotFound();
             }
 
             var contact = await _context.Contact.Include(x => x.ContactMessages).FirstOrDefaultAsync(u => u.id == id && u.UserId == currentUser.Id);
             if (contact == null)
             {
-                return Json("contact wasnt found");
+                return NotFound();
             }
-            //contact.ContactMessages.Clear();
             _context.Contact.Remove(contact);
             await _context.SaveChangesAsync();
             return Json("success");
         }
 
-        /*
-        // GET: Contacts/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Contacts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name,server,last,lastdate")] Contact contact)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(contact);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(contact);
-        }
-
-        // GET: Contacts/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null || _context.Contact == null)
-            {
-                return NotFound();
-            }
-
-            var contact = await _context.Contact.FindAsync(id);
-            if (contact == null)
-            {
-                return NotFound();
-            }
-            return View(contact);
-        }
-
-
-
-        // GET: Contacts/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null || _context.Contact == null)
-            {
-                return NotFound();
-            }
-
-            var contact = await _context.Contact
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (contact == null)
-            {
-                return NotFound();
-            }
-
-            return View(contact);
-        }
-
-        // POST: Contacts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            if (_context.Contact == null)
-            {
-                return Problem("Entity set 'server_tryContext.Contact'  is null.");
-            }
-            var contact = await _context.Contact.FindAsync(id);
-            if (contact != null)
-            {
-                _context.Contact.Remove(contact);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ContactExists(string id)
-        {
-          return (_context.Contact?.Any(e => e.id == id)).GetValueOrDefault();
-        }
-        */
     }
 }

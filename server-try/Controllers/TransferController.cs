@@ -7,6 +7,8 @@ using Message = server.Models.Message;
 
 namespace server_try.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class TransferController : Controller
     {
         private readonly server_tryContext _context;
@@ -17,8 +19,11 @@ namespace server_try.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(string from, string to, string content)
+        public async Task<IActionResult> Post([FromBody] Dictionary<string, string> data)
         {
+            string from = data["from"];
+            string to = data["to"];
+            string content = data["content"];
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.Id == to);
             if (currentUser == null)
             {
@@ -30,7 +35,9 @@ namespace server_try.Controllers
                 return Json("couldnt find contact");
             }
             var newMessage = new Message(content, false);
-            currentContact.ContactMessages.Add(newMessage);
+            currentContact.ContactMessages.Insert(0, newMessage);
+            currentContact.last = content;
+            currentContact.lastdate = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
             await _context.SaveChangesAsync();
             return Json(currentContact.ContactMessages);
         }

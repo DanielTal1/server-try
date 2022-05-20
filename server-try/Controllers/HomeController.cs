@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using server_try.Data;
 using server_try.Models;
 using System.Diagnostics;
@@ -15,7 +16,7 @@ namespace server_try.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return Json(_context.User);
+            return Json(_context.User.Include(x=>x.ContactsList));
         }
 
         public IActionResult Privacy()

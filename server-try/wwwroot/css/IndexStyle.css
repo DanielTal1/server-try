@@ -1,0 +1,67 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    /*box-sizing: border-box;*/
+}
+
+html, body {
+    background: #e6e6e6;
+}
+
+a.review-card {
+    color: black;
+    text-decoration-line: none;
+    display: block;
+}
+
+div.card:hover * {
+    background: gainsboro;
+}
+
+.input-group .btn {
+    background: #A9A9A9;
+    border: 1px solid gainsboro;
+    width: 70px;
+}
+
+.input-group .btn.add-new {
+    text-decoration: none;
+    margin-right: 30px;
+    border-radius: 30px;
+    border-top-right-radius: 30px !important;
+    border-bottom-right-radius: 30px !important;
+    width: 120px;
+}
+
+.form-control {
+    border-radius: 0;
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+}
+    .form-control:focus {
+        outline: none;
+    }
+a.add-review {
+    color: white;
+    text-decoration-line: none;
+    display: block;
+}
+a.add-review:hover {
+    color: black;
+}
+.bi-search:hover {
+    color: black;
+}
+.bi-pencil-square,.bi-x-square {
+    font-size: 25px;
+    color: black;
+}
+.bi-pencil-square:hover, .bi-x-square:hover {
+    color: gray;
+}
+.reviews {
+    -webkit-box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 25%);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.25);
+    box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 25%);
+    border-radius: 10px;
+}

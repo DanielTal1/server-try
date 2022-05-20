@@ -10,6 +10,8 @@ using server_try.Data;
 
 namespace server_try.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class UsersController : Controller
     {
         private readonly server_tryContext _context;
@@ -21,14 +23,16 @@ namespace server_try.Controllers
 
         // GET: Users
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Get()
         {
             return Json(_context.User.Include(x => x.ContactsList));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Login(string Username, string Password)
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] Dictionary<string, string> data)
         {
+            string Username = data["Username"];
+            string Password = data["Password"];
             var user = await _context.User.FirstOrDefaultAsync(u => u.UserName == Username && u.Password == Password);
             if (user != null)
             {
@@ -38,7 +42,7 @@ namespace server_try.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] User user)
         {
             if (ModelState.IsValid)
@@ -59,98 +63,5 @@ namespace server_try.Controllers
             return Json("Success");
         }
 
-
-        // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null || _context.User == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return View(user);
-        }
-
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,UserName,Password,Image,Nickname")] User user)
-        {
-            if (id != user.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
-        }
-
-        // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null || _context.User == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            if (_context.User == null)
-            {
-                return Problem("Entity set 'server_tryContext.User'  is null.");
-            }
-            var user = await _context.User.FindAsync(id);
-            if (user != null)
-            {
-                _context.User.Remove(user);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserExists(string id)
-        {
-          return (_context.User?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }

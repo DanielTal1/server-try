@@ -10,7 +10,7 @@ namespace server.Models
         public Message( string content, bool sent)
         {
             this.content = content;
-            this.created = DateTime.Now.ToString("ISO 8601");
+            this.created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
             this.sent = sent;
         }
         public int id { get; set; }
