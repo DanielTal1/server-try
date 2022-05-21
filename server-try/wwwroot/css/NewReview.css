@@ -12,6 +12,9 @@
 .add-review {
     margin-top: 30%;
 }
+.btn {
+    color: white;
+}
 .form-group .btn {
     margin-top: 10px;
     height: 100%;

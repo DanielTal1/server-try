@@ -8,6 +8,7 @@ builder.Services.AddDbContext<server_tryContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddControllersWithViews();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Allow All",
