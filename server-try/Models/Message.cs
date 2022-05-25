@@ -10,7 +10,10 @@ namespace server.Models
         public Message( string content, bool sent)
         {
             this.content = content;
-            this.created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
+            DateTime date1 = DateTime.UtcNow;
+            TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("Israel Standard Time");
+            DateTime date2 = TimeZoneInfo.ConvertTime(date1, tz);
+            this.created = date2.ToString("o");
             this.sent = sent;
         }
         public int id { get; set; }

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Rita\\Documents\\AdvancedProg2\\exercises\\ex2\\server-try\\server-try.csproj": {}
+    "C:\\Users\\דניאל טל\\Desktop\\server-try\\server-try\\server-try.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Rita\\Documents\\AdvancedProg2\\exercises\\ex2\\server-try\\server-try.csproj": {
+    "C:\\Users\\דניאל טל\\Desktop\\server-try\\server-try\\server-try.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Rita\\Documents\\AdvancedProg2\\exercises\\ex2\\server-try\\server-try.csproj",
+        "projectUniqueName": "C:\\Users\\דניאל טל\\Desktop\\server-try\\server-try\\server-try.csproj",
         "projectName": "server-try",
-        "projectPath": "C:\\Users\\Rita\\Documents\\AdvancedProg2\\exercises\\ex2\\server-try\\server-try.csproj",
-        "packagesPath": "C:\\Users\\Rita\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Rita\\Documents\\AdvancedProg2\\exercises\\ex2\\server-try\\obj\\",
+        "projectPath": "C:\\Users\\דניאל טל\\Desktop\\server-try\\server-try\\server-try.csproj",
+        "packagesPath": "C:\\Users\\דניאל טל\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\דניאל טל\\Desktop\\server-try\\server-try\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Rita\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\דניאל טל\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -73,7 +73,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }

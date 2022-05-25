@@ -21,24 +21,24 @@ namespace server_try.Controllers
             _context = context;
         }
 
-        [HttpGet("api/contacts/:{id}/messages")]
+        [HttpGet("api/contacts/{id}/messages")]
         public async Task<IActionResult> Get(string id,string user)
         {
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
                 //couldnt find user
-                return Json("couldnt find user");
+                return NotFound();
             }
             var currentContact = await  _context.Contact.Include(x => x.ContactMessages).FirstOrDefaultAsync(u => u.id == id && u.UserId == currentUser.Id);
             if (currentContact == null)
             {
-                return Json("couldnt find contact");
+                return NotFound();
             }
             return Json(currentContact.ContactMessages);
         }
 
-        [HttpPost("api/contacts/:{id}/messages")]
+        [HttpPost("api/contacts/{id}/messages")]
         public async Task<IActionResult> Post(string id, [FromBody] Dictionary<string, string> data)
         {
             string content = data["content"];
@@ -46,45 +46,48 @@ namespace server_try.Controllers
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
-                return Json("couldnt find user");
+                return NotFound();
             }
             var currentContact = currentUser.ContactsList.Where(u => u.id == id).FirstOrDefault();
             if (currentContact == null)
             {
-                return Json("couldnt find contact");
+                return NotFound();
             }
             var newMessage = new Message(content, true);
             currentContact.ContactMessages.Insert(0,newMessage);
             currentContact.last = content;
-            currentContact.lastdate= DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
+            DateTime date1 = DateTime.UtcNow;
+            TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("Israel Standard Time");
+            DateTime date2 = TimeZoneInfo.ConvertTime(date1, tz);
+            currentContact.lastdate= date2.ToString("o");
             await _context.SaveChangesAsync();
-            return Json(currentContact.ContactMessages);
+            return StatusCode(StatusCodes.Status201Created);
         }
 
-        [HttpGet("api/contacts/:{id}/messages/:{id2}")]
+        [HttpGet("api/contacts/{id}/messages/{id2}")]
         public async Task<IActionResult> Get(string id, string user, int id2)
         {
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
-                return Json("couldnt find user");
+                return NotFound();
             }
             var currentContact = await _context.Contact.Include(x => x.ContactMessages).FirstOrDefaultAsync(u => u.id == id && u.UserId == currentUser.Id);
             if (currentUser == null)
             {
-                return Json("couldnt find contact");
+                return NotFound();
             }
             var askedMessage= currentContact.ContactMessages.Where(m=>m.id==id2).FirstOrDefault();
             if (askedMessage == null)
             {
-                return Json("couldnt find message");
+                return NotFound();
             }
             return Json(askedMessage);
 
         }
 
 
-        [HttpPut("api/contacts/:{id}/messages/:{id2}")]
+        [HttpPut("api/contacts/{id}/messages/{id2}")]
         public async Task<IActionResult> Put(string id, int id2, [FromBody] Dictionary<string, string> data)
         {
             string content = data["content"];
@@ -92,47 +95,47 @@ namespace server_try.Controllers
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
-                return Json("couldnt find user");
+                return NotFound();
             }
             var currentContact = await _context.Contact.Include(x => x.ContactMessages).FirstOrDefaultAsync(u => u.id == id && u.UserId == currentUser.Id);
             if (currentUser == null)
             {
-                return Json("couldnt find contact");
+                return NotFound();
             }
             var askedMessage = currentContact.ContactMessages.Where(m => m.id == id2).FirstOrDefault();
             if (askedMessage == null)
             {
-                return Json("couldnt find message");
+                return NotFound();
             }
             askedMessage.content = content;
             _context.Message.Update(askedMessage);
             await _context.SaveChangesAsync();
-            return Json(askedMessage);
+            return StatusCode(StatusCodes.Status204NoContent);
 
         }
 
 
-        [HttpDelete("api/contacts/:{id}/messages/:{id2}")]
+        [HttpDelete("api/contacts/{id}/messages/{id2}")]
         public async Task<IActionResult> Delete(string id, [FromBody] string user, int id2)
         {
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
-                return Json("couldnt find user");
+                return NotFound();
             }
             var currentContact = await _context.Contact.Include(x => x.ContactMessages).FirstOrDefaultAsync(u => u.id == id && u.UserId == currentUser.Id);
             if (currentUser == null)
             {
-                return Json("couldnt find contact");
+                return NotFound();
             }
             var askedMessage = currentContact.ContactMessages.FirstOrDefault(m => m.id == id2);
             if (askedMessage == null)
             {
-                return Json("couldnt find message");
+                return NotFound();
             }
             _context.Message.Remove(askedMessage);
             await _context.SaveChangesAsync();
-            return Json("success");
+            return StatusCode(StatusCodes.Status204NoContent);
 
         }
         

@@ -524,3 +524,4 @@ C:\Users\Rita\Documents\AdvancedProg2\exercises\ex2\server-try\obj\Debug\net6.0\
 C:\Users\Rita\Documents\AdvancedProg2\exercises\ex2\server-try\obj\Debug\net6.0\server-try.pdb
 C:\Users\Rita\Documents\AdvancedProg2\exercises\ex2\server-try\obj\Debug\net6.0\server-try.genruntimeconfig.cache
 C:\Users\Rita\Documents\AdvancedProg2\exercises\ex2\server-try\obj\Debug\net6.0\ref\server-try.dll
+C:\Users\דניאל טל\Desktop\server-try\server-try\bin\Debug\net6.0\libman.json

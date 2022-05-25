@@ -35,9 +35,9 @@ namespace server_try.Controllers
                     from value in
                     (from data in currentUser.ContactsList
                      orderby data.lastdate descending
-                     select new { ID = data.id, name = data.name,server= data.server,last= data.last,lastdate=data.lastdate })
-                                group value by value.name into g
-                                select g.First();
+                     select new { ID = data.id, name = data.name, server = data.server, last = data.last, lastdate = data.lastdate })
+                    group value by value.name into g
+                    select g.First();
 
             return Json(ret);
         }
@@ -50,40 +50,72 @@ namespace server_try.Controllers
             string name = data["name"];
             string server = data["server"];
             string user = data["user"];
-            var currentUser = await _context.User.Include(x=>x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
+            var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
-                return Json("user wasnt found");
+                return NotFound();
             }
-            var checkIfAlreadyContact= currentUser.ContactsList.Where(m => m.id == id);
+            var checkIfAlreadyContact = currentUser.ContactsList.Where(m => m.id == id);
             if (checkIfAlreadyContact.Any())
             {
-                return Json("Already Contact");
+                return BadRequest();
             }
-            var addedContact = new Contact(id, currentUser.Id, name, server);
-            currentUser.ContactsList.Add(addedContact);
+            var addedContact = new Contact(id, currentUser.UserName, name, server);
+            currentUser.ContactsList.Insert(0, addedContact);
             await _context.SaveChangesAsync();
-            return Json("Success");
+            return StatusCode(StatusCodes.Status201Created);
+        }
+
+
+
+
+
+        // adds lastdate to new contact so the contact will appear at the top of contact list
+        [HttpPost("AddContact")]
+        public async Task<IActionResult> AddContact([FromBody] Dictionary<string, string> data)
+        {
+            string id = data["id"];
+            string name = data["name"];
+            string server = data["server"];
+            string user = data["user"];
+            var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+            var checkIfAlreadyContact = currentUser.ContactsList.Where(m => m.id == id);
+            if (checkIfAlreadyContact.Any())
+            {
+                return BadRequest();
+            }
+            var addedContact = new Contact(id, currentUser.UserName, name, server);
+            DateTime date1 = DateTime.UtcNow;
+            TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("Israel Standard Time");
+            DateTime date2 = TimeZoneInfo.ConvertTime(date1, tz);
+            addedContact.lastdate = date2.ToString("o");
+            currentUser.ContactsList.Insert(0, addedContact);
+            await _context.SaveChangesAsync();
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         // GET: Contacts/:5
-        [HttpGet(":{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id, string user)
         {
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
-                return Json("user wasnt found");
+                return NotFound();
             }
             if (id == null || _context.Contact == null)
             {
-                return Json("contact wasnt found");
+                return NotFound();
             }
 
             var contact = currentUser.ContactsList.Where(m => m.id == id);
             if (contact == null)
             {
-                return Json("contact wasnt found");
+                return NotFound();
             }
             var ret =
                 from data in contact
@@ -94,7 +126,7 @@ namespace server_try.Controllers
 
 
 
-        [HttpPut(":{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Put(string id, [FromBody] Dictionary<string, string> data)
         {
             string name = data["name"];
@@ -103,34 +135,34 @@ namespace server_try.Controllers
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
-                return Json("user wasnt found");
+                return NotFound();
             }
             if (id == null || _context.Contact == null)
             {
-                return Json("contact wasnt found");
+                return NotFound();
             }
 
             var contact = currentUser.ContactsList.Where(m => m.id == id).FirstOrDefault();
             if (contact == null)
             {
-                return Json("contact wasnt found");
+                return NotFound();
             }
             contact.name = name;
             contact.server = server;
             _context.Contact.Update(contact);
             await _context.SaveChangesAsync();
-            return Json("success");
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
 
-        [HttpDelete(":{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromBody] string user, string id)
         {
 
             var currentUser = await _context.User.Include(x => x.ContactsList).FirstOrDefaultAsync(u => u.UserName == user);
             if (currentUser == null)
             {
-                return BadRequest();
+                return NotFound(); ;
             }
             if (id == null || _context.Contact == null)
             {
@@ -144,7 +176,7 @@ namespace server_try.Controllers
             }
             _context.Contact.Remove(contact);
             await _context.SaveChangesAsync();
-            return Json("success");
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
     }

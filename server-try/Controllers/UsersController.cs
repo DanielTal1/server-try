@@ -10,7 +10,8 @@ using server_try.Data;
 
 namespace server_try.Controllers
 {
-    [ApiController]
+
+[ApiController]
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
