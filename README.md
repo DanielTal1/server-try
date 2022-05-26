@@ -26,10 +26,7 @@ https://github.com/DanielTal1/server-try.git
 
 #### `download the needed packages`  
 
-Write the following line in the Package Manager Console:   
-npm i   
-This will automatically download the necessary dependencies of the project.  
-Then write the following lines int the Package Manager Console:  
+Write the following lines int the Package Manager Console:  
 Install-Package EntityFramework (if you don't have it already)  
 Enable-Migrations(if you didn't use Entity Framework before)  
 Update-Database  
