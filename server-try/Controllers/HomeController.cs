@@ -16,7 +16,8 @@ namespace server_try.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return Json(_context.User.Include(x=>x.ContactsList));
+            return View();
+            //return Json(_context.User.Include(x=>x.ContactsList));
         }
 
         public IActionResult Privacy()

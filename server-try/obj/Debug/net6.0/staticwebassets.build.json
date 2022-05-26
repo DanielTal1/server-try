@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "UTH5ehVQnywVbO5fbWS14NPk+/pyMqYZ+i7ASbwpfqA=",
+  "Hash": "z4v1HW3dEITp0BktX0ha7963UAWHyjIzvlZyvTC+as4=",
   "Source": "server-try",
   "BasePath": "_content/server-try",
   "Mode": "Default",
@@ -219,23 +219,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
-    },
-    {
-      "Identity": "C:\\Users\\Rita\\Documents\\AdvancedProg2\\exercises\\ex2\\server-try\\wwwroot\\js\\ws.js",
-      "SourceId": "server-try",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Rita\\Documents\\AdvancedProg2\\exercises\\ex2\\server-try\\wwwroot\\",
-      "BasePath": "_content/server-try",
-      "RelativePath": "js/ws.js",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\js\\ws.js"
     },
     {
       "Identity": "C:\\Users\\Rita\\Documents\\AdvancedProg2\\exercises\\ex2\\server-try\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",

@@ -43,3 +43,27 @@ body {
     box-shadow: none;
     border-color: #ced4da
 }
+.image{
+    border-radius: 7px;
+}
+.footer {
+    position: absolute;
+    bottom: 10px;
+}
+.bubble {
+    background-color: white;
+    padding: 12px;
+    padding-top: 10px;
+    border-radius: 7px;
+    font-weight: 400;
+}
+.nav-item:hover {
+    background-color: gainsboro;
+    border-radius: 7px;
+}
+.display-6 {
+    font-size: larger;
+}
+.display-5 {
+    font-size: xx-large;
+}
