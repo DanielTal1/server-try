@@ -13,6 +13,12 @@ namespace server.Controllers
         public ReviewsController()
         {
             _service = new ReviewService();
+            if (_service.GetAll().Count == 0)
+            {
+                _service.Create("Rita", "The best one!", 5);
+                _service.Create("Daniel", "Cool app guys!", 5);
+                _service.Create("Foo", "Awful", 1);
+            }
         }
 
         // GET: Reviews

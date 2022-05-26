@@ -7,7 +7,7 @@ using server_try.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<server_tryContext>(options =>
+object p = builder.Services.AddDbContext<server_tryContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("server_tryContext") ?? throw new InvalidOperationException("Connection string 'server_tryContext' not found.")));
 
 // Add services to the container.
